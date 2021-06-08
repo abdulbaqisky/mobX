@@ -198,24 +198,29 @@ class _PadDeadState extends State<PadDead> {
           },
           steps: <Step>[
             Step(
-              title: const Text('Step 1 title'),
+              title: const Text('Order received'),
               content: Container(
                   alignment: Alignment.centerLeft,
                   child: const Text('Content for Step 1')),
             ),
             Step(
-              title: Text('Step 2 title'),
+              title: Text('Order ready'),
               content: Container(
-                  alignment: Alignment.centerLeft,
-                  child: const Text('Content for Step 2')),
+                  alignment: Alignment.centerLeft, child: const Text('')),
             ),
             Step(
-              title: Text('Step 3 title'),
-              content: Text('Content for Step 3'),
+              title: Text('Order picked up'),
+              content: Container(
+                alignment: Alignment.centerLeft,
+                child: const Text('Content for Step 1'),
+              ),
             ),
             Step(
-              title: Text('Step 4 title'),
-              content: Text('Content for Step 4'),
+              title: Text('On the way'),
+              content: Container(
+                alignment: Alignment.centerLeft,
+                child: const Text('Content for Step 1'),
+              ),
             ),
           ],
         ),

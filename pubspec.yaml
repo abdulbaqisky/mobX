@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
+  geolocator: ^7.0.3
   google_maps_flutter: ^2.0.6
   mobx: ^2.0.0
   flutter_mobx: ^2.0.0
@@ -68,7 +69,7 @@ flutter:
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  #       - asset: fonts/   Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
