@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hello/pages/Favorite.dart';
 import 'package:hello/pages/Order.dart';
 import 'package:hello/pages/Profile.dart';
 import 'package:hello/pages/home.dart';
 import 'counter.dart';
 
+//apiKey= AIzaSyD8jUPxpWCjjotMbXnK5oYmRHxAgpONORk
 final counter = Counter();
 
 void main() {
@@ -110,120 +112,132 @@ class _PadDeadState extends State<PadDead> {
     );
   }
 
-  Column orderColumn() {
-    return Column(
+  Stack orderColumn() {
+    return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Card(
-                  shadowColor: Colors.blue,
-                  child: Container(
-                    width: 75,
-                    height: 75,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      image: DecorationImage(
-                        image: AssetImage("images/pizza.jpg"),
-                        fit: BoxFit.cover,
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Card(
+                      shadowColor: Colors.blue,
+                      child: Container(
+                        width: 75,
+                        height: 75,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          image: DecorationImage(
+                            image: AssetImage("images/pizza.jpg"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Order number',
-                      style: TextStyle(color: Colors.black, fontSize: 16),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Observer(
+                          builder: (_) => Text(
+                            'Order    ${counter.orderNumber}',
+                            style: TextStyle(color: Colors.black, fontSize: 16),
+                          ),
+                        ),
+                        Observer(
+                          builder: (_) => Text(
+                            'Pep.pizza    ${counter.size}',
+                            style: TextStyle(
+                                color: Colors.deepOrange, fontSize: 16),
+                          ),
+                        ),
+                        Observer(
+                          builder: (_) => Text(
+                            'Dominos    N${counter.price}',
+                            style: TextStyle(
+                              color: Colors.black38,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      'Pep.pizza Medium',
-                      style: TextStyle(color: Colors.deepOrange, fontSize: 16),
-                    ),
-                    Text(
-                      'Dominos price',
-                      style: TextStyle(
-                        color: Colors.black38,
-                        fontSize: 16,
+                  ),
+                  TextButton(
+                    onPressed: () {},
+                    child: Container(
+                      width: 130,
+                      child: Text(
+                        'See Details',
+                        textAlign: TextAlign.end,
+                        style: TextStyle(fontSize: 20),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ),
-              TextButton(
-                onPressed: () {},
-                child: Container(
-                  width: 130,
-                  child: Text(
-                    'See Details',
-                    textAlign: TextAlign.end,
-                    style: TextStyle(fontSize: 20),
+            ),
+            Divider(
+              color: Colors.grey,
+              thickness: 1,
+            ),
+            Stepper(
+              currentStep: counter.index,
+              onStepCancel: () {
+                if (counter.index > 0) {
+                  setState(() {
+                    counter.index -= 1;
+                  });
+                }
+              },
+              onStepContinue: () {
+                if (counter.index <= 0) {
+                  setState(() {
+                    counter.index += 1;
+                  });
+                }
+              },
+              onStepTapped: (int index) {
+                setState(() {
+                  counter.index = index;
+                });
+              },
+              steps: <Step>[
+                Step(
+                  title: const Text('Order received'),
+                  content: Container(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('Content for Step 1')),
+                ),
+                Step(
+                  title: Text('Order ready'),
+                  content: Container(
+                      alignment: Alignment.centerLeft, child: const Text('')),
+                ),
+                Step(
+                  title: Text('Order picked up'),
+                  content: Container(
+                    alignment: Alignment.centerLeft,
+                    child: const Text('Content for Step 1'),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          color: Colors.grey,
-          thickness: 1,
-        ),
-        Stepper(
-          currentStep: counter.index,
-          onStepCancel: () {
-            if (counter.index > 0) {
-              setState(() {
-                counter.index -= 1;
-              });
-            }
-          },
-          onStepContinue: () {
-            if (counter.index <= 0) {
-              setState(() {
-                counter.index += 1;
-              });
-            }
-          },
-          onStepTapped: (int index) {
-            setState(() {
-              counter.index = index;
-            });
-          },
-          steps: <Step>[
-            Step(
-              title: const Text('Order received'),
-              content: Container(
-                  alignment: Alignment.centerLeft,
-                  child: const Text('Content for Step 1')),
-            ),
-            Step(
-              title: Text('Order ready'),
-              content: Container(
-                  alignment: Alignment.centerLeft, child: const Text('')),
-            ),
-            Step(
-              title: Text('Order picked up'),
-              content: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text('Content for Step 1'),
-              ),
-            ),
-            Step(
-              title: Text('On the way'),
-              content: Container(
-                alignment: Alignment.centerLeft,
-                child: const Text('Content for Step 1'),
-              ),
+                Step(
+                  title: Text('On the way'),
+                  content: Container(
+                    alignment: Alignment.centerLeft,
+                    child: const Text('Content for Step 1'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
+        TrackButton(),
       ],
     );
   }

@@ -1,6 +1,10 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../counter.dart';
+
+final counter = Counter();
 
 class Order extends StatefulWidget {
   @override
@@ -8,12 +12,39 @@ class Order extends StatefulWidget {
 }
 
 class _OrderState extends State<Order> {
+  late Position currentLocation;
   late GoogleMapController mapController;
 
-  final LatLng _center = const LatLng(6.576421, 3.365344);
+  LatLng _center = const LatLng(6.576421, 3.365344);
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserLocation();
+  }
+
+  @override
+  void dispose() {
+    mapController.dispose();
+    super.dispose();
+  }
+
+  Future<Position> locateUser() async {
+    return Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
+  getUserLocation() async {
+    currentLocation = await locateUser();
+    setState(() {
+      _center = LatLng(currentLocation.latitude, currentLocation.longitude);
+    });
+    print('center $_center');
   }
 
   @override
@@ -88,48 +119,84 @@ class _OrderState extends State<Order> {
                   //myLocationButtonEnabled: true,
                   initialCameraPosition: CameraPosition(
                     target: _center,
-                    zoom: 11.0,
+                    zoom: 15.0,
                   ),
                 ),
-                Positioned.fill(
-                  child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Container(
-                          height: 50,
-                          width: 130,
-                          child: Card(
-                            color: Colors.deepOrange,
-                            child: TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                'Details',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )),
-                ),
+                TrackButton(),
               ],
             ),
             decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25))),
+              color: Colors.grey,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+              ),
+            ),
           ),
         ),
       ],
     );
   }
-
   /*Future<void> _goToPlace() async {
     final GoogleMapController controller = await mapController;
     controller.animateCamera(
         CameraUpdate.newCameraPosition(LatLng(latitude, longitude)));
   }*/
+}
+
+class TrackButton extends StatefulWidget {
+  @override
+  _State createState() => _State();
+}
+
+class _State extends State<TrackButton> {
+  @override
+  Widget build(BuildContext context) {
+    return Positioned.fill(
+      child: Align(
+          alignment: Alignment.bottomRight,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              height: 50,
+              width: 130,
+              child: Card(
+                color: Colors.deepOrange,
+                child: ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                              title: const Text('AlertDialog Title'),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: const <Widget>[
+                                    Text('This is a demo alert dialog.'),
+                                    Text(
+                                        'Would you like to approve of this message?'),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('Approve'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ));
+                  },
+                  child: Text(
+                    'Details',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )),
+    );
+  }
 }
