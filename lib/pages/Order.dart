@@ -165,27 +165,28 @@ class _State extends State<TrackButton> {
                 child: ElevatedButton(
                   onPressed: () {
                     showDialog(
-                        context: context,
-                        builder: (_) => AlertDialog(
-                              title: const Text('AlertDialog Title'),
-                              content: SingleChildScrollView(
-                                child: ListBody(
-                                  children: const <Widget>[
-                                    Text('This is a demo alert dialog.'),
-                                    Text(
-                                        'Would you like to approve of this message?'),
-                                  ],
-                                ),
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('Approve'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            ));
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('AlertDialog Title'),
+                        content: SingleChildScrollView(
+                          child: ListBody(
+                            children: const <Widget>[
+                              Text('This is a demo alert dialog.'),
+                              Text(
+                                  'Would you like to approve of this message?'),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('Approve'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      ),
+                    );
                   },
                   child: Text(
                     'Details',
